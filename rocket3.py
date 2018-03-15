@@ -1,8 +1,9 @@
 from ggrocket import Rocket, Planet
 from math import radians, sqrt, log
 from ggmath import InputButton, Timer
+from ggmath import Slider
 
-earth = Planet(planetmass=0)  # no gravity to simplify things
+earth = Planet(viewscale=0.00005)  # no gravity to simplify things
 
 RocketStarted = False
 StartTime = None    # to keep track of when burn started
@@ -16,6 +17,7 @@ N1D = 9             # Number of rocket engines
 
 Ftotal = F1D * N1D  # Total thrust (Newtons)
 tburn = 180         # Burn time (seconds)
+
 
 # Predict the final velocity using Tsiolkovsky's Rocket Equation
 vmaxre = Ftotal*tburn/mp*log((me+mp)/me)
@@ -59,11 +61,17 @@ def GetMass():
         # not started: just return the full pre-launch rocket mass
         return me + mp
         
+def GetHeading():
+    global BurnTime
+    return radians(90-(83.5*(BurnTime/180)))
+        
 # Create a button for starting the simulation
 # Physical positioning at 10,400 pixels, calls the StartRocket function
 start = InputButton((10,400), "START", StartRocket, positioning="physical", size=15)
 
-#Create and "run" the rocket
-rocket = Rocket(earth, thrust=GetThrust, mass=GetMass)
-earth.run(rocket)
+# Add a slider for controlling the timezoom
+tz = Slider((10,500), 0, 5, 0, positioning="physical")
 
+#Create and "run" the rocket
+rocket = Rocket(earth, thrust=GetThrust, mass=GetMass, heading=GetHeading, timezoom=tz)
+earth.run(rocket)
