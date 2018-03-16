@@ -114,8 +114,8 @@ def GetHeading():
     global Stage2Started
     if Stage1Started:
         return radians(90-(90*(BurnTime/180)))
-    elif Stage2Started:                         #this doesn't work (needs fixing)
-        return radians(56-(56*Burntime/372))
+    elif Stage2Started:
+        return radians((50)-((50)*(BurnTime/372)))
     else:
         return 0
 
